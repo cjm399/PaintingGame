@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
             percentComplete = (float)currPixelCount / (float)totalPixelCount;
         }
 
-        if (percentComplete >= .6f)
+        if (percentComplete >= .45f)
         {
             if(paintCanvasIndex == PaintCanvases.Length-1)
             {
