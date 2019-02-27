@@ -15,8 +15,11 @@ public class GameManager : MonoBehaviour
     public int totalPixelCount;
     public int currPixelCount;
     public Texture2D currentTexture;
+    public int paintCanvasIndex;
     [HideInInspector]
     public static GameManager Instance;
+
+    public GameObject[] PaintCanvases;
 
     private void Awake()
     {
@@ -33,19 +36,11 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        paintCanvasIndex = 0;
         currentPaintColor = Color.red;
         sizeMultiplyer = 5;
-        currPixelCount = 0;
-        totalPixelCount = 0;
-        currentTexture = currentPaintCanvas.GetComponent<Image>().sprite.texture;
-        Color[] colors = currentTexture.GetPixels();
-        for(int i = 0; i < colors.Length; i++)
-        {
-            if(colors[i].a != 0 && !IsBasicallyBlack(colors[i]))
-            {
-                totalPixelCount++;
-            }
-        }
+        currentPaintCanvas = PaintCanvases[0];
+        SetPaintCounters();
 
     }
 
@@ -53,11 +48,30 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         updateResolution();
-        if(currPixelCount != 0)
+        if (currPixelCount != 0)
         {
             percentComplete = (float)currPixelCount / (float)totalPixelCount;
         }
-        
+
+        if (percentComplete >= .6f)
+        {
+            if(paintCanvasIndex == PaintCanvases.Length-1)
+            {
+                currentPaintCanvas.GetComponent<Painting>().enabled = false;
+                for(int i = 0; i < PaintCanvases.Length; i++)
+                {
+                    PaintCanvases[i].SetActive(true);
+                }
+            }
+            else
+            {
+                currentPaintCanvas.GetComponent<Painting>().enabled = false;
+                currentPaintCanvas.SetActive(false);
+                currentPaintCanvas = PaintCanvases[++paintCanvasIndex];
+                currentPaintCanvas.SetActive(true);
+                SetPaintCounters();
+            }
+        }
     }
 
     public bool IsBasicallyBlack(Color color, float epsilon = .039f)
@@ -79,6 +93,22 @@ public class GameManager : MonoBehaviour
     {
         screenHeight = Screen.height;
         screenWidth = Screen.width;
+    }
+
+    private void SetPaintCounters()
+    {
+        percentComplete = 0f;
+        currPixelCount = 0;
+        totalPixelCount = 0;
+        currentTexture = currentPaintCanvas.GetComponent<Image>().sprite.texture;
+        Color[] colors = currentTexture.GetPixels();
+        for (int i = 0; i < colors.Length; i++)
+        {
+            if (colors[i].a != 0 && !IsBasicallyBlack(colors[i]))
+            {
+                totalPixelCount++;
+            }
+        }
     }
 
 }
