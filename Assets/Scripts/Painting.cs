@@ -38,7 +38,7 @@ public class Painting : MonoBehaviour
         int sizeMultiplyer = GameManager.Instance.sizeMultiplyer;
         int count = 0;
 
-        if (Input.GetKey(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.Mouse0) && GameManager.Instance.currentState == GameManager.State.PAINTING)
         {
             position = Camera.main.ScreenToViewportPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, paintingCanvas.transform.position.z));
             position.x *= screenWidth;

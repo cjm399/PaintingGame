@@ -4,6 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
+    public enum State {
+        PAINTING,
+        PICK_COLOR,
+        FINISHED
+    };
     [HideInInspector]
     public int screenHeight;
     [HideInInspector]
@@ -16,6 +21,7 @@ public class GameManager : MonoBehaviour
     public int currPixelCount;
     public Texture2D currentTexture;
     public int paintCanvasIndex;
+    public State currentState;
     [HideInInspector]
     public static GameManager Instance;
 
@@ -41,6 +47,7 @@ public class GameManager : MonoBehaviour
         sizeMultiplyer = 5;
         currentPaintCanvas = PaintCanvases[0];
         SetPaintCounters();
+        currentState = State.PAINTING;
 
     }
 
@@ -57,6 +64,7 @@ public class GameManager : MonoBehaviour
         {
             if(paintCanvasIndex == PaintCanvases.Length-1)
             {
+                currentState = State.FINISHED;
                 currentPaintCanvas.GetComponent<Painting>().enabled = false;
                 for(int i = 0; i < PaintCanvases.Length; i++)
                 {
