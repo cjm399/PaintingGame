@@ -6,12 +6,18 @@ using UnityEngine.UI;
 public class ColorPicker : MonoBehaviour
 {
     Texture2D colorSelection;
+    Image colorSelectionImage;
+    Image fadeCanvas;
     RectTransform colorSelectionRect;
+    bool isOpen = false;
     // Start is called before the first frame update
     void Start()
     {
         colorSelection = GameObject.Find("ColorPicker").GetComponent<Image>().sprite.texture;
+        colorSelectionImage = GameObject.Find("ColorPicker").GetComponent<Image>();
         colorSelectionRect = GameObject.Find("ColorPicker").GetComponent<RectTransform>();
+        fadeCanvas = GameObject.Find("FadeGraphic").GetComponent<Image>();
+
     }
 
     // Update is called once per frame
@@ -23,12 +29,6 @@ public class ColorPicker : MonoBehaviour
             int screenWidth = GameManager.Instance.screenWidth;
             RectTransform paintingRectTransform = colorSelectionRect.GetComponent<RectTransform>();
             Vector3 position;
-            Texture2D old = new Texture2D((int)colorSelection.width, (int)colorSelection.height);
-            Color[] colors = colorSelection.GetPixels(0, 0, (int)colorSelection.width, (int)colorSelection.height);
-            old.SetPixels(colors);
-            Color currentPaintColor = GameManager.Instance.currentPaintColor;
-            int sizeMultiplyer = GameManager.Instance.sizeMultiplyer;
-            int count = 0;
 
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
@@ -58,6 +58,8 @@ public class ColorPicker : MonoBehaviour
                     Color selectedColor = colorSelection.GetPixel((int)pixel.x, (int)pixel.y);
                     GameManager.Instance.currentPaintColor = selectedColor;
                     GameManager.Instance.currentState = GameManager.State.PAINTING;
+                    StopAllCoroutines();
+                    StartCoroutine(FadeOutCanvas());
                 }
             }
         }
@@ -65,6 +67,52 @@ public class ColorPicker : MonoBehaviour
 
     public void Selected()
     {
-        GameManager.Instance.currentState = GameManager.State.PICK_COLOR;
+        StopAllCoroutines();
+        if(!isOpen)
+        {
+            GameManager.Instance.currentState = GameManager.State.PICK_COLOR;
+            StartCoroutine(FadeInCanvas());
+        }
+        else
+        {
+            GameManager.Instance.currentState = GameManager.State.PAINTING;
+            StartCoroutine(FadeOutCanvas());
+        }
+
+    }
+
+    IEnumerator FadeInCanvas()
+    {
+        isOpen = true;
+        float timer = 0;
+        float duration = 2f;
+        Color fadeFinal = new Color(fadeCanvas.color.r, fadeCanvas.color.g, fadeCanvas.color.b, 1f);
+        Color colorPalletFinal = new Color(colorSelectionImage.color.r, colorSelectionImage.color.g, colorSelectionImage.color.b, 1f);
+        while (timer < duration)
+        {
+            fadeCanvas.color = Color.Lerp(fadeCanvas.color, fadeFinal, timer / duration);
+            colorSelectionImage.color = Color.Lerp(colorSelectionImage.color, colorPalletFinal, timer / duration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        
+        yield return null;
+    }
+
+    IEnumerator FadeOutCanvas()
+    {
+        isOpen = false;
+        float timer = 0;
+        float duration = 1f;
+        Color fadeFinal = new Color(fadeCanvas.color.r, fadeCanvas.color.g, fadeCanvas.color.b, 0f);
+        Color colorPalletFinal = new Color(colorSelectionImage.color.r, colorSelectionImage.color.g, colorSelectionImage.color.b, 0f);
+        while (timer < duration)
+        {
+            fadeCanvas.color = Color.Lerp(fadeCanvas.color, fadeFinal, timer / duration);
+            colorSelectionImage.color = Color.Lerp(colorSelectionImage.color, colorPalletFinal, timer / duration);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+        yield return null;
     }
 }

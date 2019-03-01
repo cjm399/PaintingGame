@@ -12,9 +12,11 @@ public class Painting : MonoBehaviour
     int screenWidth;
     int screenHeight;
     Texture2D originalTexture;
+    Dictionary<Vector2, bool> myBlackPixels;
 
     void Start()
     {
+        myBlackPixels = new Dictionary<Vector2, bool>();
         paintingImage = paintingCanvas.GetComponent<Image>();
         paintingSprite = paintingImage.sprite;
         texture = paintingSprite.texture;
@@ -70,8 +72,18 @@ public class Painting : MonoBehaviour
                     for (int j = 0; j < squareWidth; j++)
                     {
                         Color color = old.GetPixel((int)pixel.x - (squareWidth / 2) + i, (int)pixel.y - (squareWidth / 2) + j);
-                        if (color.a != 0 && !IsBasicallyBlack(color))
+                        Vector2 vec = new Vector2((int)pixel.x - (squareWidth / 2) + i, (int)pixel.y - (squareWidth / 2) + j);
+                        if (color.a != 0 && (!IsBasicallyBlack(color) || myBlackPixels.ContainsKey(vec)))
                         {
+                            //If the user paints something black, this keeps it from being perminant.
+                            if(IsBasicallyBlack(currentPaintColor))
+                            {
+                                if(!myBlackPixels.ContainsKey(vec))
+                                {
+                                    myBlackPixels.Add(vec, true);
+                                }
+
+                            }
                             old.SetPixel((int)pixel.x - (squareWidth / 2) + i, (int)pixel.y - (squareWidth / 2) + j, currentPaintColor);
                             if(color == originalTexture.GetPixel((int)pixel.x - (squareWidth / 2) + i, (int)pixel.y - (squareWidth / 2) + j))
                                 count++;
@@ -86,7 +98,7 @@ public class Painting : MonoBehaviour
         texture.Apply();
     }
 
-    public bool IsBasicallyBlack(Color color, float epsilon = .039f)
+    public bool IsBasicallyBlack(Color color, float epsilon = .012f)
     {
         if (color.r >= 0 && color.r <= epsilon)
         {
