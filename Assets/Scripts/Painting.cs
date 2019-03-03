@@ -6,16 +6,18 @@ using UnityEngine.UI;
 public class Painting : MonoBehaviour
 {
     Texture2D texture;
-    public GameObject paintingCanvas;
+    GameObject paintingCanvas;
     Image paintingImage;
     Sprite paintingSprite;
     int screenWidth;
     int screenHeight;
     Texture2D originalTexture;
     Dictionary<Vector2, bool> myBlackPixels;
+    Texture2D old;
 
     void Start()
     {
+        paintingCanvas = this.gameObject;
         myBlackPixels = new Dictionary<Vector2, bool>();
         paintingImage = paintingCanvas.GetComponent<Image>();
         paintingSprite = paintingImage.sprite;
@@ -23,7 +25,7 @@ public class Painting : MonoBehaviour
         originalTexture = new Texture2D(texture.width, texture.height);
         originalTexture.SetPixels(texture.GetPixels());
         texture.Apply();
-
+        old = new Texture2D((int)texture.width, (int)texture.height);
     }
 
     // Update is called once per frame
@@ -33,7 +35,6 @@ public class Painting : MonoBehaviour
         screenWidth = GameManager.Instance.screenWidth;
         RectTransform paintingRectTransform = paintingCanvas.GetComponent<RectTransform>();
         Vector3 position;
-        Texture2D old = new Texture2D((int)texture.width, (int)texture.height);
         Color[] colors = texture.GetPixels(0, 0, (int)texture.width, (int)texture.height);
         old.SetPixels(colors);
         Color currentPaintColor = GameManager.Instance.currentPaintColor;
@@ -98,7 +99,7 @@ public class Painting : MonoBehaviour
         texture.Apply();
     }
 
-    public bool IsBasicallyBlack(Color color, float epsilon = .012f)
+    public bool IsBasicallyBlack(Color color, float epsilon = .35f)
     {
         if (color.r >= 0 && color.r <= epsilon)
         {

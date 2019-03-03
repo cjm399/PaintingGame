@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     public GameObject[] PaintCanvases;
+    public GameObject[] PaintCanvasPair;
 
     private void Awake()
     {
@@ -60,7 +61,7 @@ public class GameManager : MonoBehaviour
             percentComplete = (float)currPixelCount / (float)totalPixelCount;
         }
 
-        if (percentComplete >= .45f)
+        if (percentComplete >= .9f)
         {
             if(paintCanvasIndex == PaintCanvases.Length-1)
             {
@@ -68,6 +69,7 @@ public class GameManager : MonoBehaviour
                 currentPaintCanvas.GetComponent<Painting>().enabled = false;
                 for(int i = 0; i < PaintCanvases.Length; i++)
                 {
+                    PaintCanvasPair[i].SetActive(false);
                     PaintCanvases[i].SetActive(true);
                 }
             }
@@ -75,7 +77,9 @@ public class GameManager : MonoBehaviour
             {
                 currentPaintCanvas.GetComponent<Painting>().enabled = false;
                 currentPaintCanvas.SetActive(false);
+                PaintCanvasPair[paintCanvasIndex].SetActive(false);
                 currentPaintCanvas = PaintCanvases[++paintCanvasIndex];
+                PaintCanvasPair[paintCanvasIndex].SetActive(true);
                 currentPaintCanvas.SetActive(true);
                 SetPaintCounters();
             }
