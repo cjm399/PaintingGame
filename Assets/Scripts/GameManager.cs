@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
         INTRO,
         PAINTING,
         PICK_COLOR,
+        PICKED,
         FINISHED
     };
     [HideInInspector]
@@ -194,7 +195,7 @@ public class GameManager : MonoBehaviour
         quoteArea.gameObject.GetComponent<TextMeshProUGUI>().fontSize = screenWidth * .01875f;
 
         exit.sizeDelta = new Vector2(screenWidth / 20, (screenHeight / 10) / 4);
-        exit.localPosition = new Vector3(((-screenWidth + finishPic.sizeDelta.x) / 2) + (finishPic.sizeDelta.x*2)+exit.sizeDelta.x, ToolBar.localPosition.y, 0);
+        exit.localPosition = new Vector3(0, ToolBar.localPosition.y, 0);
         exit.GetChild(0).GetComponent<TextMeshProUGUI>().fontSize = screenWidth * .0125f;
     }
 

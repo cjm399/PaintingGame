@@ -70,6 +70,14 @@ public class Painting : MonoBehaviour
                 {
                     for (int j = 0; j < squareWidth; j++)
                     {
+                        if((int)pixel.x - (squareWidth/2) + i > texture.width || pixel.x - (squareWidth / 2) + i < 0)
+                        {
+                            continue;
+                        }
+                        else if((int)pixel.y - (squareWidth / 2) + j > texture.height || (int)pixel.y - (squareWidth / 2) + j < 0)
+                        {
+                            continue;
+                        }
                         Color color = texture.GetPixel((int)pixel.x - (squareWidth / 2) + i, (int)pixel.y - (squareWidth / 2) + j);
                         Vector2 vec = new Vector2((int)pixel.x - (squareWidth / 2) + i, (int)pixel.y - (squareWidth / 2) + j);
                         if (color.a != 0 && (!IsBasicallyBlack(color) || myBlackPixels.ContainsKey(vec)))

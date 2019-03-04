@@ -57,7 +57,7 @@ public class ColorPicker : MonoBehaviour
                 {
                     Color selectedColor = colorSelection.GetPixel((int)pixel.x, (int)pixel.y);
                     GameManager.Instance.currentPaintColor = selectedColor;
-                    GameManager.Instance.currentState = GameManager.State.PAINTING;
+                    GameManager.Instance.currentState = GameManager.State.PICKED;
                     StopAllCoroutines();
                     StartCoroutine(FadeOutCanvas());
                 }
@@ -91,7 +91,7 @@ public class ColorPicker : MonoBehaviour
         while (timer < duration)
         {
             fadeCanvas.color = Color.Lerp(fadeCanvas.color, fadeFinal, timer / duration);
-            colorSelectionImage.color = Color.Lerp(colorSelectionImage.color, colorPalletFinal, timer / duration);
+            colorSelectionImage.color = Color.Lerp(colorSelectionImage.color, colorPalletFinal, duration);
             timer += Time.deltaTime;
             yield return null;
         }
@@ -113,6 +113,7 @@ public class ColorPicker : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
+        GameManager.Instance.currentState = GameManager.State.PAINTING;
         yield return null;
     }
 }
