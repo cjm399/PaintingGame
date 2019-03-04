@@ -12,6 +12,7 @@ public class Intro : MonoBehaviour
     RectTransform colorSelectionRect;
     bool shouldPickColor;
     bool isOpen = false;
+    bool allowClose = false;
 
 
     void Start()
@@ -55,7 +56,7 @@ public class Intro : MonoBehaviour
         Color blank = new Color(text.color.r, text.color.g, text.color.b, 0f);
         while (timer < duration)
         {
-            text.color = Color.Lerp(text.color, blank, timer / duration);
+            text.color = Color.Lerp(text.color, blank, timer/duration);
             timer += Time.deltaTime;
             yield return null;
         }
@@ -72,6 +73,10 @@ public class Intro : MonoBehaviour
                 isOpen = true;
                 StopAllCoroutines();
                 StartCoroutine(FadeInCanvas());
+            }
+            if(!allowClose)
+            {
+                return;
             }
             int screenHeight = GameManager.Instance.screenHeight;
             int screenWidth = GameManager.Instance.screenWidth;
@@ -126,7 +131,7 @@ public class Intro : MonoBehaviour
         Color colorPalletFinal = new Color(colorPicker.color.r, colorPicker.color.g, colorPicker.color.b, 1f);
         while (timer < duration)
         {
-            fadeGraphic.color = Color.Lerp(fadeGraphic.color, fadeFinal, timer / duration);
+            fadeGraphic.color = Color.Lerp(fadeGraphic.color, fadeFinal, duration);
             colorPicker.color = Color.Lerp(colorPicker.color, colorPalletFinal, timer / duration);
             timer += Time.deltaTime;
             yield return null;
@@ -134,6 +139,7 @@ public class Intro : MonoBehaviour
         GameManager.Instance.PaintCanvases[0].SetActive(true);
         GameManager.Instance.PaintCanvasPair[0].SetActive(true);
         GameManager.Instance.PaintCanvases[0].gameObject.GetComponent<Painting>().enabled = false;
+        allowClose = true;
 
         yield return null;
     }
@@ -148,7 +154,7 @@ public class Intro : MonoBehaviour
         Color colorPalletFinal = new Color(colorPicker.color.r, colorPicker.color.g, colorPicker.color.b, 0f);
         while (timer < duration)
         {
-            fadeGraphic.color = Color.Lerp(fadeGraphic.color, fadeFinal, timer / duration);
+            fadeGraphic.color = Color.Lerp(fadeGraphic.color, fadeFinal, duration);
             colorPicker.color = Color.Lerp(colorPicker.color, colorPalletFinal, timer / duration);
             timer += Time.deltaTime;
             yield return null;

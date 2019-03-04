@@ -91,7 +91,7 @@ public class ColorPicker : MonoBehaviour
         while (timer < duration)
         {
             fadeCanvas.color = Color.Lerp(fadeCanvas.color, fadeFinal, timer / duration);
-            colorSelectionImage.color = Color.Lerp(colorSelectionImage.color, colorPalletFinal, duration);
+            colorSelectionImage.color = Color.Lerp(colorSelectionImage.color, colorPalletFinal, timer / duration);
             timer += Time.deltaTime;
             yield return null;
         }
