@@ -7,6 +7,7 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public enum State {
+        INTRO,
         PAINTING,
         PICK_COLOR,
         FINISHED
@@ -56,7 +57,7 @@ public class GameManager : MonoBehaviour
         sizeMultiplyer = 5;
         currentPaintCanvas = PaintCanvases[0];
         SetPaintCounters();
-        currentState = State.PAINTING;
+        currentState = State.INTRO;
 
 
         updateResolution();
