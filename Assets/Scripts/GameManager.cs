@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
             percentComplete = (float)currPixelCount / (float)totalPixelCount;
         }
 
-        if (percentComplete >= .9f)
+        if (percentComplete >= .75f)
         {
             finishPictureButton.interactable = true;
         }
@@ -121,6 +121,11 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
     private void updateResolution()
     {
         screenHeight = Screen.height;
@@ -165,6 +170,8 @@ public class GameManager : MonoBehaviour
         RectTransform ColorPicker = GameObject.Find("ColorPicker").GetComponent<RectTransform>();
         RectTransform Slider = GameObject.Find("Slider").GetComponent<RectTransform>();
         RectTransform finishPic = finishPictureButton.GetComponent<RectTransform>();
+        RectTransform quoteArea = GameObject.Find("Quote").GetComponent<RectTransform>();
+        RectTransform exit = GameObject.Find("Exit").GetComponent<RectTransform>();
 
         FadeGraphic.sizeDelta = resolution;
         ColorPicker.sizeDelta = resolution * .75f;
@@ -182,6 +189,13 @@ public class GameManager : MonoBehaviour
         finishPic.sizeDelta = new Vector2(screenWidth / 10, (screenHeight / 10)/4);
         finishPic.localPosition = new Vector3(((-screenWidth+finishPic.sizeDelta.x)/2)+finishPic.sizeDelta.x, ToolBar.localPosition.y, 0);
         finishPic.GetChild(0).GetComponent<TextMeshProUGUI>().fontSize = screenWidth * .0125f;
+
+        quoteArea.sizeDelta = new Vector2(screenWidth / 2, screenHeight);
+        quoteArea.gameObject.GetComponent<TextMeshProUGUI>().fontSize = screenWidth * .01875f;
+
+        exit.sizeDelta = new Vector2(screenWidth / 20, (screenHeight / 10) / 4);
+        exit.localPosition = new Vector3(((-screenWidth + finishPic.sizeDelta.x) / 2) + (finishPic.sizeDelta.x*2)+exit.sizeDelta.x, ToolBar.localPosition.y, 0);
+        exit.GetChild(0).GetComponent<TextMeshProUGUI>().fontSize = screenWidth * .0125f;
     }
 
 }

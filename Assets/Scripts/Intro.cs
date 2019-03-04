@@ -44,7 +44,6 @@ public class Intro : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
-        shouldPickColor = true;
         yield return StartCoroutine(FadeOutQuote());
     }
 
